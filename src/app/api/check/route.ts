@@ -8,7 +8,7 @@ export async function POST(request : Request, params : {
   const formData = await request.formData();
   const name = formData.get('name'); // Corrected to get 'name' from formData
   try {
-    
+    console.log(name)
     let {data: website, error} = await supabase
      .from('websites')
      .select('id, visits')
@@ -16,11 +16,21 @@ export async function POST(request : Request, params : {
      .single();
 
     if (error ||!website) {
-      throw new Error('Website not found');
+      const {error } = await supabase
+        .from('websites')
+        .insert({ name: name});
+        if(!error){
+        const { error } = await supabase
+          .from('websites')
+          .update({visits: 1})
+          .match({'name': name});
+          return NextResponse.json('Success', {status: 200})
+        }
+        return NextResponse.json('Success', {status: 200})
     }
 
     // Increment the visits count
-    const newVisitsCount = website.visits + 1;
+    const newVisitsCount = website.visits +  1;
 
     const {error: updateError} = await supabase
      .from('websites')
