@@ -8,7 +8,7 @@ export async function POST(request : Request, params : {
   const formData = await request.formData();
   const name = formData.get('name'); // Corrected to get 'name' from formData
   try {
-    // Fetch the current website record to get the current visits count
+    
     let {data: website, error} = await supabase
      .from('websites')
      .select('id, visits')
@@ -34,6 +34,6 @@ export async function POST(request : Request, params : {
     return NextResponse.json("Success", {status: 200});
   } catch (error) {
     console.error('Error updating website visits:', error);
-    return NextResponse.json('Error', {status: 500}); // Adjust status code as needed
+    return NextResponse.json('Error', {status: 500}); 
   }
 }
